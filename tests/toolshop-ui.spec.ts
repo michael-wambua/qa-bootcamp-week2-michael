@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-// Sourced from .env (TOOLSHOP_URL); falls back to the live site if unset.
-const BASE = process.env.TOOLSHOP_URL ?? 'https://practicesoftwaretesting.com';
+// Sourced from .env (TOOLSHOP_URL); falls back to the live site if unset or empty.
+const BASE = process.env.TOOLSHOP_URL || 'https://practicesoftwaretesting.com';
 
 test('home page has the expected title', async ({ page }) => {
   await page.goto(BASE);
@@ -15,7 +15,7 @@ test('search for "pliers" returns only pliers products', async ({ page }) => {
 
   await expect(page.getByText(/products? found for 'pliers'/)).toBeVisible();
 
-  // No role-based locator exists for product names, so i will use the data-test attribute
+  // No role-based locator exists for product names, so use the data-test attribute
   const productNames = page.locator('[data-test="product-name"]');
 
   // Retries until the list has filtered, so it never reads stale cards
