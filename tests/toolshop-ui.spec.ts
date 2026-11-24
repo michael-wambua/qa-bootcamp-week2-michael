@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 
 // Sourced from .env (TOOLSHOP_URL); falls back to the live site if unset.
-// playwright.config.ts loads .env via dotenv/config, so process.env is populated.
 const BASE = process.env.TOOLSHOP_URL ?? 'https://practicesoftwaretesting.com';
 
 test('home page has the expected title', async ({ page }) => {
