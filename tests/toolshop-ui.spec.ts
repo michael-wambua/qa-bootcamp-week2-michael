@@ -9,22 +9,21 @@ test('home page has the expected title', async ({ page }) => {
 });
 
 test('search for "pliers" returns only pliers products', async ({ page }) => {
+  const term = 'pliers';
+
   await page.goto(BASE);
-  await page.getByRole('textbox', { name: 'Search' }).fill('pliers');
+  await page.getByRole('textbox', { name: 'Search' }).fill(term);
   await page.getByRole('button', { name: 'Search' }).click();
 
-  await expect(page.getByText(/products? found for 'pliers'/)).toBeVisible();
+  await expect(page.getByText(new RegExp(`products? found for '${term}'`))).toBeVisible();
 
   // No role-based locator exists for product names, so use the data-test attribute
   const productNames = page.locator('[data-test="product-name"]');
 
-  // Retries until the list has filtered, so it never reads stale cards
-  await expect
-    .poll(async () => {
-      const names = await productNames.allTextContents();
-      return names.length > 0 && names.every(n => n.toLowerCase().includes('pliers'));
-    })
-    .toBe(true);
+  // Results are shown, and none of them lacks the search term.
+  // Both assertions retry, so stale cards from the unfiltered list can't pass.
+  await expect(productNames).not.toHaveCount(0);
+  await expect(productNames.filter({ hasNotText: new RegExp(term, 'i') })).toHaveCount(0);
 });
 
 test('invalid login shows an error message', async ({ page }) => {
