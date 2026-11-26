@@ -1,79 +1,76 @@
-# QA Bootcamp Week 2 Starter
+# Toolshop Test Suite
 
-This is the starting point for Week 2 of the QA bootcamp. During the week you will use it to practise:
-
-- TypeScript
-- Playwright (UI testing)
-- Postman (API testing)
-- The Toolshop REST API
-
-There are no tests in this repo. You will write them during the week.
+Playwright UI and API tests for [practicesoftwaretesting.com](https://practicesoftwaretesting.com) and its API.
 
 ## Prerequisites
 
-Install these before you start:
+- Node.js (LTS) and npm
+- Git
+- Internet access (the tests run against the public Toolshop site and API)
 
-- [Node.js](https://nodejs.org/) (the current LTS version)
-- [Git](https://git-scm.com/)
-- [VS Code](https://code.visualstudio.com/)
+## Setup and run
 
-## Setup
-
-Run these steps in order from a terminal.
-
-1. Clone the repo and open the folder:
-
+1. **Clone and install:**
    ```bash
-   git clone <repo-url>
-   cd qa-bootcamp-week2-starter
-   ```
-
-2. Install the dependencies:
-
-   ```bash
+   git clone https://github.com/michael-wambua/qa-bootcamp-week2-michael.git
+   cd qa-bootcamp-week2-michael
    npm install
-   ```
-
-3. Install the Chromium browser for Playwright:
-
-   ```bash
    npx playwright install chromium
    ```
-
-4. Copy `.env.example` to `.env`:
-
+2. **Configure:**
    ```bash
    cp .env.example .env
    ```
-
-   `.env` already contains the Toolshop website URL (`TOOLSHOP_URL`) and the Toolshop API URL (`TOOLSHOP_API_URL`). Only change them if your trainer gives you different URLs.
-
-5. Check that your setup works:
-
+   The defaults in `.env.example` work as they are:
+   - `TOOLSHOP_URL`: base URL of the Toolshop website (used by the UI tests)
+   - `TOOLSHOP_API_URL`: base URL of the Toolshop API
+3. **Run:**
    ```bash
-   npm run check
+   npm test
    ```
 
-   This sends a GET request to the Toolshop API's `/products` endpoint (no login needed). If everything is set up correctly, it prints your Node version, the HTTP status (200), the number of products, and a last line that says `PASS`.
+## Other ways to run
 
-> **Warning:** never commit `.env`. It is where your own settings and, later in the course, your secrets (keys, tokens, passwords) live. It is listed in `.gitignore` so Git ignores it. Do not remove it from there.
+```bash
+npx playwright test tests/api-cart.spec.ts        # one file
+npx playwright test -g "pliers"                   # tests matching a name
+npx playwright test --trace on                    # record traces
+npx playwright show-trace <path-to>/trace.zip     # open a trace
+npx playwright show-report                        # open the HTML report
+```
 
-## Folders
+## What's in the suite (7 tests)
 
-| Folder     | What it is for |
-|------------|----------------|
-| `tests/`   | Your Playwright tests. It is empty for now; you will add tests during the week. |
-| `scripts/` | Helper scripts. `check.ts` checks your setup and is run by `npm run check`. |
+| Type | File | Test |
+| --- | --- | --- |
+| UI | `tests/home-title.spec.ts` | Home page has the expected title |
+| UI | `tests/search-pliers.spec.ts` | Search "pliers" returns only pliers products |
+| UI | `tests/invalid-login.spec.ts` | Invalid login shows an error message |
+| UI | `tests/search-by-name.spec.ts` | MS-6: search by name returns only matching products (uses `pages/HomePage.ts`) |
+| API | `tests/api-products.spec.ts` | GET /products returns 200 and a product list |
+| API | `tests/api-cart.spec.ts` | Create a cart, add a product, check the response fields |
+| API | `tests/api-cart.spec.ts` | Non-existent cart id returns 404 |
 
-## Scripts
+## Project structure
 
-- `npm run check`: checks your `.env` and that you can reach the Toolshop API.
-- `npm test`: runs the Playwright tests in `tests/`.
+```
+tests/        Playwright UI and API tests (config.ts holds the shared base URL)
+pages/        Page objects (HomePage.ts)
+features/     Gherkin feature file (cart.feature)
+.env.example  Environment variable template
+```
 
-## TypeScript basics (Day 6)
+## Test data and cleanup
 
-- `src/ts-basics/functions.ts`: typed function with a default parameter.
-- `src/ts-basics/optional-chaining.ts`: optional property and optional chaining on a possibly-null value.
-- `src/profile-validator.ts`: typed user profile with optional settings. `isNotified(user)` returns `false` when `settings` or `notifications` is missing.
+- Tests create their own data and don't depend on each other.
+- Any cart a test creates is deleted afterwards (`test.afterEach`), even if the test fails.
 
-Run any file with `npx tsx <path>`, for example `npx tsx src/profile-validator.ts`.
+## Troubleshooting
+
+- **Browser not found:** run `npx playwright install chromium`.
+- **Tests fail with an undefined URL:** `.env` is missing. Run `cp .env.example .env`.
+- **Timeouts or 5xx errors:** the public Toolshop site or API may be down or slow. Rerun later.
+
+## Not included
+
+- Cucumber scenario: not finished. `features/cart.feature` is a feature file only, with no step definitions.
