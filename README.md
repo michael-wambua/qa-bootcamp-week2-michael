@@ -1,6 +1,6 @@
 # Toolshop Test Suite
 
-Playwright UI and API tests for [practicesoftwaretesting.com](https://practicesoftwaretesting.com) and its API.
+Playwright UI and API tests for [practicesoftwaretesting.com](https://practicesoftwaretesting.com) and its API, plus one Cucumber-js scenario.
 
 ## Prerequisites
 
@@ -37,9 +37,10 @@ npx playwright test -g "pliers"                   # tests matching a name
 npx playwright test --trace on                    # record traces
 npx playwright show-trace <path-to>/trace.zip     # open a trace
 npx playwright show-report                        # open the HTML report
+npm run cucumber                                  # Cucumber scenario
 ```
 
-## What's in the suite (7 tests)
+## What's in the suite (7 Playwright tests)
 
 | Type | File | Test |
 | --- | --- | --- |
@@ -51,13 +52,21 @@ npx playwright show-report                        # open the HTML report
 | API | `tests/api-cart.spec.ts` | Create a cart, add a product, check the response fields |
 | API | `tests/api-cart.spec.ts` | Non-existent cart id returns 404 |
 
+## Cucumber scenario
+
+`npm run cucumber` runs one scenario from `features/cart.feature`: "A shopper adds a product and sees it in the cart". Its step definitions are in `features/steps/cart.steps.ts`.
+
+The other two scenarios are tagged `@wip` and have no step definitions yet, so Cucumber skips them. `npm test` runs only the Playwright tests.
+
 ## Project structure
 
 ```
-tests/        Playwright UI and API tests (config.ts holds the shared base URL)
-pages/        Page objects (HomePage.ts)
-features/     Gherkin feature file (cart.feature)
-.env.example  Environment variable template
+tests/           Playwright UI and API tests (config.ts holds the shared base URL)
+pages/           Page objects (HomePage.ts)
+features/        Gherkin feature file (cart.feature)
+features/steps/  Cucumber step definitions (cart.steps.ts)
+cucumber.mjs     Cucumber config (skips @wip scenarios)
+.env.example     Environment variable template
 ```
 
 ## Test data and cleanup
@@ -70,7 +79,3 @@ features/     Gherkin feature file (cart.feature)
 - **Browser not found:** run `npx playwright install chromium`.
 - **Tests fail with an undefined URL:** `.env` is missing. Run `cp .env.example .env`.
 - **Timeouts or 5xx errors:** the public Toolshop site or API may be down or slow. Rerun later.
-
-## Not included
-
-- Cucumber scenario: not finished. `features/cart.feature` is a feature file only, with no step definitions.

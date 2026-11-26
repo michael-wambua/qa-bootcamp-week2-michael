@@ -3,9 +3,11 @@
   "private": true,
   "scripts": {
     "check": "tsx scripts/check.ts",
-    "test": "playwright test"
+    "test": "playwright test",
+    "cucumber": "NODE_OPTIONS='--import tsx' cucumber-js"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
     "@playwright/test": "1.65.1",
     "@types/node": "26.6.6",
     "dotenv": "18.0.10",
