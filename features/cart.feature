@@ -13,6 +13,7 @@ Feature: Shopping cart
     Then the cart lists "Combination Pliers" with quantity 1
     And the cart total equals the product price
 
+  @wip
   Scenario: Removing the last item empties the cart
     Given the cart contains 1 "Combination Pliers"
     When the shopper opens the cart
@@ -20,6 +21,7 @@ Feature: Shopping cart
     Then the cart shows no items
     And the cart total is 0
 
+  @wip
   Scenario: Deleting one of two identical items removes only that row
     Given the cart contains 2 separate rows of "Combination Pliers"
     When the shopper opens the cart

@@ -1,11 +1,11 @@
 # Toolshop Test Suite
 
-Playwright UI and API tests for [practicesoftwaretesting.com](https://practicesoftwaretesting.com) and its API, plus one Cucumber-js scenario and TypeScript practice files. Built during Week 2 of the QA bootcamp.
+Playwright UI and API tests for [practicesoftwaretesting.com](https://practicesoftwaretesting.com) and its API, plus one Cucumber-js scenario.
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (current LTS) and npm
-- [Git](https://git-scm.com/)
+- Node.js (LTS) and npm
+- Git
 - Internet access (the tests run against the public Toolshop site and API)
 
 ## Setup and run
@@ -29,19 +29,15 @@ Playwright UI and API tests for [practicesoftwaretesting.com](https://practiceso
    npm test
    ```
 
-> **Warning:** never commit `.env`. It is listed in `.gitignore`. Do not remove it from there.
-
 ## Other ways to run
 
 ```bash
-npm run check                                     # checks .env and that the Toolshop API is reachable (prints PASS)
-npm run cucumber                                  # Cucumber scenario
 npx playwright test tests/api-cart.spec.ts        # one file
 npx playwright test -g "pliers"                   # tests matching a name
 npx playwright test --trace on                    # record traces
 npx playwright show-trace <path-to>/trace.zip     # open a trace
 npx playwright show-report                        # open the HTML report
-npx tsx <path>                                    # run a TypeScript practice file
+npm run cucumber                                  # Cucumber scenario
 ```
 
 ## What's in the suite (7 Playwright tests)
@@ -56,21 +52,11 @@ npx tsx <path>                                    # run a TypeScript practice fi
 | API | `tests/api-cart.spec.ts` | Create a cart, add a product, check the response fields |
 | API | `tests/api-cart.spec.ts` | Non-existent cart id returns 404 |
 
-`npm test` runs all seven.
-
 ## Cucumber scenario
 
 `npm run cucumber` runs one scenario from `features/cart.feature`: "A shopper adds a product and sees it in the cart". Its step definitions are in `features/steps/cart.steps.ts`.
 
 The other two scenarios are tagged `@wip` and have no step definitions yet, so Cucumber skips them. `npm test` runs only the Playwright tests.
-
-## TypeScript basics (Day 6)
-
-- `src/ts-basics/functions.ts`: typed function with a default parameter.
-- `src/ts-basics/optional-chaining.ts`: optional property and optional chaining on a possibly-null value.
-- `src/profile-validator.ts`: typed user profile with optional settings. `isNotified(user)` returns `false` when `settings` or `notifications` is missing.
-
-Run any file with `npx tsx <path>`, for example `npx tsx src/profile-validator.ts`.
 
 ## Project structure
 
@@ -79,8 +65,6 @@ tests/           Playwright UI and API tests (config.ts holds the shared base UR
 pages/           Page objects (HomePage.ts)
 features/        Gherkin feature file (cart.feature)
 features/steps/  Cucumber step definitions (cart.steps.ts)
-src/             TypeScript practice files (ts-basics/, profile-validator.ts)
-scripts/         Helper scripts (check.ts, run by npm run check)
 cucumber.mjs     Cucumber config (skips @wip scenarios)
 .env.example     Environment variable template
 ```
